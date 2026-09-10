@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Employee Portal</title>
 </head>
@@ -33,8 +34,17 @@
 
     <p id="result"></p>
 
+
+    <h2>Employee List</h2>
+
+    <button onclick="loadEmployees()">View Employees</button>
+
+    <ul id="employeeList"></ul>
+
+
     <script>
 
+        // Add Employee
         document.getElementById("employeeForm").addEventListener("submit", function(event) {
 
             event.preventDefault();
@@ -46,25 +56,62 @@
             };
 
             fetch("http://localhost:3000/employees", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify(employee)
-})
-.then(response => response.json())
-.then(data => {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(employee)
+            })
 
-    console.log(data);
+            .then(response => response.json())
 
-    document.getElementById("result").innerText =
-        data.message;
+            .then(data => {
 
-});
+                console.log(data);
+
+                document.getElementById("result").innerText =
+                    data.message;
+
+            });
 
         });
+
+
+        // Load Employees
+        function loadEmployees() {
+
+            fetch("http://localhost:3000/employees")
+
+            .then(response => response.json())
+
+            .then(employees => {
+
+                const employeeList =
+                    document.getElementById("employeeList");
+
+                employeeList.innerHTML = "";
+
+                employees.forEach(employee => {
+
+                    const item = document.createElement("li");
+
+                    item.innerText =
+                        employee.name +
+                        " | " +
+                        employee.employee_id +
+                        " | " +
+                        employee.department;
+
+                    employeeList.appendChild(item);
+
+                });
+
+            });
+
+        }
 
     </script>
 
 </body>
+
 </html>
