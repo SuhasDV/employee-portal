@@ -33,7 +33,10 @@ const server = http.createServer((req, res) => {
 
     // Test backend
     if (req.method === "GET" && req.url === "/") {
-        res.writeHead(200, { "Content-Type": "text/plain" });
+        res.writeHead(200, {
+            "Content-Type": "text/plain"
+        });
+
         res.end("Employee Portal Backend is running!");
         return;
     }
@@ -50,6 +53,24 @@ const server = http.createServer((req, res) => {
         });
 
         res.end(JSON.stringify(employees));
+        return;
+    }
+
+    // Get total employee count
+    if (req.method === "GET" && req.url === "/employees/count") {
+
+        const result = db
+            .prepare("SELECT COUNT(*) AS count FROM employees")
+            .get();
+
+        res.writeHead(200, {
+            "Content-Type": "application/json"
+        });
+
+        res.end(JSON.stringify({
+            count: result.count
+        }));
+
         return;
     }
 
